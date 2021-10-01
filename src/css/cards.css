@@ -1,0 +1,57 @@
+.dog,.persona{
+    padding: 40px;
+}
+.dog{
+    background-color: blueviolet;
+}
+.persona{
+    background-color: brown;
+}
+.dog:hover,.persona:hover,.casa:hover{
+    transition: transform .2s;
+    transform:scale(1.2);
+    
+}
+.card-title{
+    font-size: 20px;
+    margin: 10px 0;
+}
+.cards-container{
+    display: flex;
+    justify-content: space-evenly; 
+    flex-wrap: wrap;
+}
+.card-text{
+    margin: 20px 20px;
+    text-align: left;
+}
+.card-button{
+    margin: 20px auto;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #CCCC;
+    cursor: pointer;
+    background-color: #0275d8;
+    color: white;
+}
+.card-button:hover{
+    transition:background-color 0.5s;
+    background-color: #045ca8;
+}
+.card{
+    text-align: center;
+    width: 18rem;
+    margin: 70px 0;
+    border: 1px solid #CCCC;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px #CCCC;
+    overflow:hidden ;
+
+}
+.img-container{
+    width: 18rem;
+    height: 18rem;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
