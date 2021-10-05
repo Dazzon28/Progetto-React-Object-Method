@@ -16,9 +16,9 @@ const App = () => {
         <Card image="img/person.png" cardClass="persona" title="Persona" onClick={() => { changeState("persona") }} />
       </div>}
       
-      {selector === "animale" && <Table name="animale" />}
-      {selector === "casa" && <Table name="casa" />}
-      {selector === "persona" && <Table name="persona" />}
+      {selector === "animale" && <Table name="animale" onClick={() => { changeState("Home") }}/>}
+      {selector === "casa" && <Table name="casa" onClick={() => { changeState("Home") }}/>}
+      {selector === "persona" && <Table name="persona" onClick={() => { changeState("Home") }}/>}
     </div>
 
   );
