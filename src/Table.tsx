@@ -10,10 +10,9 @@ const Table = ({ name, onClick}: Props) => {
     const [list, setList] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [i,setI] = useState<any>(null);
-    const [row,setRow]= useState<any>({});
+    const [input,setInput]= useState<any>({});
     const [shown,setShown] = useState(false);
-    useEffect(() => {
-        setLoading(true)
+    const fetchData = ()=>{
         fetch("http://localhost:8080/api/" + name.toString() + "/all", {
             method: 'GET',
         })
@@ -23,10 +22,34 @@ const Table = ({ name, onClick}: Props) => {
                 console.log(error);
             })
             .finally(() => setLoading(false))
+    }
+    useEffect(() => {
+        setLoading(true)
+        fetchData();
     }, [])
-    const filterList = (list:any[])=>{
-        return Object.keys(list).filter((property)=>property!=="id" && property!=="idCasa")}
-   
+    const handleChange = (e:any,l:any[])=>{
+        setInput({...input,id:list[i].id,[e.target.name]:e.target.value})
+        console.log(input)
+    }
+    const handleClick = (i:any)=>{
+        console.log(JSON.stringify(input))
+        setLoading(true)
+        setShown(false)
+        fetch("http://localhost:8080/api/" + name.toString() + "/update", {
+            method: 'PUT',
+            body:JSON.stringify(input),
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+            .then(response => response.json())
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => (fetchData(),setLoading(false)))
+        
+    }
+    const filterList = (list:any[])=>Object.keys(list).filter((property)=>property!=="id" && property!=="idCasa")
     return (
         <div className="table-container">
             {loading ? <div>loading</div>: <table><thead>
@@ -45,13 +68,11 @@ const Table = ({ name, onClick}: Props) => {
             </table>}
             <button className="table-button" onClick={onClick}>GO BACK</button>
             <div className={!shown ? "hidden" :"selected-row"} >
-                {i !== null && 
-                    filterList(list[i]).map((att:any,index)=>{
-                        console.log(list[i])
-                    return <input type="text" name={att} key={index} value={list[i][att]} onChange={(e)=>{console.log("a")}} />}
-                )
+                {i !== null && <> 
                 
-            }
+                {filterList(list[i]).map((att:any,index)=><input type="text" name={att} key={index} value={input[att]} onChange={(e)=>{handleChange(e,list[i])}} />)}
+                    <button className="table-button" onClick={()=>handleClick(list[i].id)}>UPDATE</button></>
+                }
                 <button className="table-button" onClick={()=>setShown(false)} >CANCEL</button>
 
             </div>
