@@ -3,6 +3,21 @@
     flex-direction: column;
     align-items: center;
 }
+.selected-row{
+    margin: 100px auto 0;
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.selected-row .table-button,select{
+    align-self: flex-end;
+}
+.input-flex{
+    display:flex;
+    flex-direction : column;
+    align-self: center;
+}
 table{
     margin: 50px 200px;
     align-items: center;
@@ -11,6 +26,24 @@ table{
     box-shadow: -10px 10px 5px #CCC;
     overflow: hidden;
     border-spacing: 0px;
+}
+.loader-div{
+    display: flex;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+    color: #0275d8;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+}
+@keyframes spinner{
+    to{transform:rotate( 360deg);}
+}
+.img-spinner{
+    animation: spinner 2s linear infinite;
+    filter: invert(32%) sepia(51%) saturate(5688%) hue-rotate(194deg) brightness(94%) contrast(98%);
 }
 thead{
     background: linear-gradient(90deg, rgba(4, 24, 202, 0.767) 0%,rgba(42, 139, 250, 0.767) 80%, rgba(87, 189, 248, 0.767) 100%);
@@ -26,12 +59,15 @@ td{
 tbody{
     display:block;
     max-height: 300px;
-    overflow-y:auto;
+    overflow-y:overlay;
 }
 thead,tbody tr{
     display: table;
     table-layout:fixed;
     width:100%;
+}
+.img-spinner{
+    height: 100px;
 }
 .table-button{
     
@@ -41,6 +77,11 @@ thead,tbody tr{
     cursor: pointer;
     background-color: #0275d8;
     color: white;
+    margin: 0 10px;
+}
+.table-button:hover{
+    transition:background-color 0.5s;
+    background-color: #045ca8;
 }
 .go-back:hover{
     transition:background-color 0.5s;
@@ -48,4 +89,30 @@ thead,tbody tr{
 }
 .hidden{
     display: none;
+}
+select{
+    height: 40px;
+    padding-right: 30px;
+    border-radius: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+.add{
+    margin: 20px auto;
+}
+label{
+    margin: 10px 30px;
+}
+input{
+    padding: 10px;
+    margin: 0 20px;
+    border-radius: 0%;
+    border: none;
+    border-bottom: 2px solid #045ca8;
+}
+*:focus{
+    outline: none;
+}
+input:focus{
+    transition:background-color 0.3s;
+    background-color: #CCC;
 }
