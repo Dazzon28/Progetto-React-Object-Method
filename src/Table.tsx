@@ -31,7 +31,9 @@ const Table = ({ name, onClick }: Props) => {
     }
     useEffect(() => {
         setLoading(true)
+        getCasa();
         fetchData();
+        setInput([])
     }, [])
     const handleChange = (e: any, l: {}) => {
         const evValue = e.target.value;
@@ -42,11 +44,29 @@ const Table = ({ name, onClick }: Props) => {
 
     }
 
-    const handleClick = (i: any) => {
+    const handleUpdate = () => {
         setLoading(true)
         setShown(false)
+        
         fetch("http://localhost:8080/api/" + name.toString() + "/update", {
-            method: 'PUT',
+            method: "PUT",
+            body: JSON.stringify(input),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => (fetchData(), setLoading(false)))
+
+    }
+    const handleAdd = (i:any) => {
+        setLoading(true)
+        setShown(false)
+        fetch("http://localhost:8080/api/" + name.toString() + "/add", {
+            method: "POST",
             body: JSON.stringify(input),
             headers: {
                 "Content-Type": "application/json"
@@ -74,7 +94,7 @@ const Table = ({ name, onClick }: Props) => {
             .catch((error) => {
                 console.log(error);
             })
-            .finally(() => setLoading(false))
+            
     }
     const viewCasa = (id: number) => {
         fetch("http://localhost:8080/api/animale/id-casa/" + id, {
@@ -97,6 +117,9 @@ const Table = ({ name, onClick }: Props) => {
             .finally(() => setLoading(false))
         setView("casa")
     }
+    const setCasaId = ()=>{
+        {name === "persona" ? setInput({...input, idCasa:1}) : setInput([])}
+    }
     const filterList = (list: any[]) => Object.keys(list).filter((property) => property !== "id" && property !== "idCasa")
     return (
         <div>
@@ -114,19 +137,19 @@ const Table = ({ name, onClick }: Props) => {
                                 setShown(true);
                                 setAdd(false);
                                 handleRow(list[id]);
-                                getCasa()
+                                
                             }}>EDIT</button></td>
                         </tr>)}
                     </tbody>
                 </table>}
                 <button className="table-button" onClick={onClick}>GO BACK</button>
-                <button className="table-button add" onClick={() => (setAdd(true), setShown(false))}>ADD</button>
+                <button className="table-button add" onClick={() => (setAdd(true), setShown(false),setCasaId())}>ADD</button>
                 <div className={!shownUpdate ? "hidden" : "selected-row"} >
                     {i !== null && <>
 
                         {filterList(list[i]).map((att: any, index) => <div className="input-flex"><label htmlFor={att}>{att}</label><input type="text" name={att} key={index} value={input[att]} onChange={(e) => { handleChange(e, list[i]) }} /></div>)}
                         {name !== "casa" &&
-                            <select name="idCasa" id="idCasa" onChange={(e) => handleChange(e, list[i])}>
+                            <select name="idCasa" id="idCasa" onChange={(e) => handleChange(e, list[i])} >
                                 {name === "animale" && <option value='' selected={input.idCasa === null && true}>NULL</option>}
                                 {casaList.map((elem, index) =>
                                     <option key={index} value={elem.id} selected={input.idCasa === elem.id && true}>{elem.via}</option>
@@ -134,10 +157,29 @@ const Table = ({ name, onClick }: Props) => {
 
                             </select>
                         }
-                        <button className="table-button" onClick={() => handleClick(list[i].id)}>UPDATE</button></>
+                        <button className="table-button" onClick={() => handleUpdate()}>UPDATE</button></>
                     }
                     <button className="table-button" onClick={() => setShown(false)} >CANCEL</button>
 
+                </div>
+                <div className={!shownAdd ? "hidden" : "selected-row"} >
+                    {shownAdd && <>
+                        {filterList(list[0]).map((att: any, index) => <div className="input-flex"><label htmlFor={att}>{att}</label><input type="text" name={att} key={index} value={input[att]} onChange={(e) => { handleChange(e, list[0]) }} /></div>)}
+                        
+                        {name !== "casa" &&
+                        
+                            <select name="idCasa" id="idCasa" onChange={(e) => handleChange(e, list[0]) }>
+                                {name === "animale" && <option value='' selected={input.idCasa === null && true}>NULL</option>}
+                                {casaList.map((elem, index) =>
+                                    <option key={index} value={elem.id} selected={input.idCasa === elem.id && true}>{elem.via}</option>
+                                )}
+
+                            </select>
+                        }
+                        <button className="table-button" onClick={() => handleAdd(list[0].idCasa)}>ADD</button>
+                    
+                    <button className="table-button" onClick={() => setShown(false)} >CANCEL</button>
+                    </>}        
                 </div>
             </div>}
             {view === "casa" &&
