@@ -1,0 +1,21 @@
+@keyframes spinner{
+    to{transform:rotate( 360deg);}
+}
+.img-spinner{
+    animation: spinner 2s linear infinite;
+    filter: invert(32%) sepia(51%) saturate(5688%) hue-rotate(194deg) brightness(94%) contrast(98%);
+}
+.loader-div{
+    margin: 50% 0 0;
+    display: flex;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    color: #0275d8;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+}
+.img-spinner{
+    height: 100px;
+}

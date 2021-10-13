@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './App.css';
-import './css/cards.css';
-import Card from "./Card";
-import Table from './Table';
+import './Components/Card/cards.css';
+import Card from "./Components/Card/Card";
+import Table from './Components/Table/Table';
 const App = () => {
   const [selector, setSelector] = useState("Home")
   return (

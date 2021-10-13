@@ -1,0 +1,103 @@
+@keyframes fadein{
+0%{opacity:0;}
+100%{opacity: 1;}
+}
+@keyframes fadeOut{
+    0%{opacity:1;}
+    100%{opacity: 0;}
+    }
+@keyframes topToBottom {
+    0% {
+      margin-top: 50%;
+    }
+    100% {
+      margin-top: 100px;
+    }
+  }
+@keyframes bottomToTop {
+    0% {
+      top: 100px;
+    }
+    100% {
+      top: 100%;
+    }
+  }
+
+input{
+    width: 400px;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 0%;
+    border: none;
+    border-bottom: 2px solid #045ca8;
+}
+.input-error{
+    border-bottom: 2px solid #c00606;
+}
+*:focus{
+    outline: none;
+}
+input:focus{
+    transition:background-color 0.3s;
+    background-color: #CCC;
+}
+.selected-row{
+    margin: 100px auto;
+    flex-direction: column;
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+select{
+    margin: 10px 0;
+}
+.input-flex{
+    display:flex;
+    flex-direction : column;
+    align-self: center;
+}
+.modal-container{
+    overflow: hidden;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+.fade-in{
+    animation: fadein 1s;
+}
+.fade-out{
+    animation: fadeOut 1s;
+}
+.close-button{
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+}
+.modal{
+    position: relative;
+    padding: 50px 0;
+    width: 500px;
+    background-color: white;
+    border-radius: 20px;
+}
+.top-to-bottom{
+    animation: topToBottom 1s;
+}
+.bottom-to-top{
+    animation: bottomToTop 1s;
+}
+.table-button{
+    margin: 10px auto;
+    
+
+}

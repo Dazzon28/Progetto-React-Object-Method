@@ -1,3 +1,4 @@
+
 .dog,.persona{
     padding: 40px;
 }
@@ -17,6 +18,7 @@
     margin: 10px 0;
 }
 .cards-container{
+    height: 100vh;
     display: flex;
     justify-content: space-evenly; 
     flex-wrap: wrap;
@@ -40,8 +42,9 @@
 }
 .card{
     text-align: center;
+    height: 500px;
     width: 18rem;
-    margin: 70px 0;
+    margin: 150px 0;
     border: 1px solid #CCCC;
     border-radius: 10px;
     box-shadow: 20px 20px 5px #CCCC;
