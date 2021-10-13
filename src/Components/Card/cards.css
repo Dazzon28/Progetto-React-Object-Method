@@ -35,6 +35,8 @@
     cursor: pointer;
     background-color: #0275d8;
     color: white;
+    text-decoration: none;
+
 }
 .card-button:hover{
     transition:background-color 0.5s;
