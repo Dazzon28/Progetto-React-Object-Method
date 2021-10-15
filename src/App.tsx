@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import './App.css';
 import './Components/Card/cards.css';
 import Card from "./Components/Card/Card";
@@ -8,10 +8,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 const App = () => {
   return (
+    
     <Router>
 
       <Switch>
@@ -31,13 +31,11 @@ const App = () => {
         <Route path="/casa">
           <Table name="casa"  />
         </Route>
-        
         <Route path="/persona">
           <Table name="persona"  />
         </Route>
       </Switch>
     </Router>
-
   );
 }
 
