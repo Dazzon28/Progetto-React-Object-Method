@@ -7,32 +7,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { setRow } from "../../Redux/Slices/rowSlice";
 import { RootState } from "../../Redux/store";
 interface Modal {
-    selectedRowList: any,
     submitFunction: string,
-    handleChange: any,
     filter: any,
     tableName: string,
     updateList: any,
     viewModal: any
 }
-const Modal = ({ selectedRowList, submitFunction, handleChange, filter, tableName, updateList, viewModal }: Modal) => {
+const Modal = ({ submitFunction, filter, tableName, updateList, viewModal }: Modal) => {
     const ref = useRef<any>()
     const dispatch = useDispatch();
     const [casaList, setCasaList] = useState<Casa[]>([]);
-    const [json, setJson] = useState<any>({})
+    const [propertyHasErrors, setPropertyHasErrors] = useState<any>({})
     const [isModalClosed, setIsModalClosed] = useState(false)
+    const regex = new RegExp(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/)
     const row = useSelector((state: RootState) => state.setRow).value.payload
-    const handleInputChange = (e: any, l: {}) => {
+    const handleInputChange = (e: any) => {
         const evValue = e.currentTarget.value;
         const evName = e.currentTarget.name;
-        const keys = Object.keys(l);
-        keys.map((key) => (dispatch(setRow({ ...row, [evName]: evValue })), setJson({ ...json, [evName]: evValue }), handleChange({ ...selectedRowList, [evName]: { value: evValue, hasErrors: false } })))
+        const keys = Object.keys(row);
+        keys.map((key) => (setPropertyHasErrors((l: {}) => ({ ...l, [evName]: false })), dispatch(setRow({ ...row, [evName]: evValue }))))
 
     }
     useEffect(() => {
-        Object.keys(selectedRowList).map((input) => {
-            setJson((json: {}) => ({ ...json, [input]: selectedRowList[input].value }))
-        })
+        Object.keys(row).map((property) => setPropertyHasErrors((l: {}) => ({ ...l, [property]: false })))
         FetchData("casa")
             .then((data) => setCasaList(data))
         const handleClickOutside = (event: any) => {
@@ -41,12 +38,7 @@ const Modal = ({ selectedRowList, submitFunction, handleChange, filter, tableNam
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
-
     }, [])
-
-
-
-
 
     const handleSubmit = (event: any) => {
         { submitFunction === "update" && UpdateData(tableName, row).finally(() => updateList(tableName)) };
@@ -60,24 +52,41 @@ const Modal = ({ selectedRowList, submitFunction, handleChange, filter, tableNam
             viewModal(false)
         }, 700)
     }
+    const handleErrors =() => {
 
 
+        Object.keys(row).map((property) => { !row[property] ? setPropertyHasErrors((l: {}) => ({ ...l, [property]: true })) : setPropertyHasErrors((l: {}) => ({ ...l, [property]: false })) })
+        if (tableName === "animale") {
+
+            { isNaN(row.nzampe) && dispatch(setRow({ ...row, nzampe: "" })) };
+            { isNaN(row.nzampe) && setPropertyHasErrors((l:{})=>({ ...l, nzampe: true })) };
+
+        }
+        if (tableName === "casa") { 
+            {isNaN(row.nlocali) ||  row.nlocali === "0" && dispatch(setRow({ ...row, nlocali: "" })) }
+            {isNaN(row.nlocali) ||  row.nlocali === "0" && setPropertyHasErrors((l:{})=>({ ...l, nlocali: true })) };
+        }
+        if (tableName === "persona"){
+            {!regex.test(row.dataNascita) && dispatch(setRow({ ...row, dataNascita: "" })) }
+            {!regex.test(row.dataNascita) && setPropertyHasErrors((l:{})=>({ ...l, dataNascita: true })) }
+        }
+    }
     return (
         <form onSubmit={(event) => handleSubmit(event)}>
             <div className={!isModalClosed ? "modal-container fade-in" : "modal-container fade-out"}>
 
                 <div className={!isModalClosed ? "selected-row modal top-to-bottom" : "selected-row modal bottom-to-top"} ref={ref}>
                     <img className="close-button" src="img/close.png" alt="X" onClick={() => closeModal()} />
-                    {filter(row).map((property: any, index: number) => (<div className="input-flex"><label>{property}</label><input required type="text" autoComplete="off" name={property} key={index} value={row[property]} onChange={(event) => { handleInputChange(event, row) }} /></div>))}
+                    {filter(row).map((property: any, index: number) => (<div className="input-flex"><label>{property}</label><input required type="text" autoComplete="off" className={propertyHasErrors[property] && "input-error"} name={property} key={index} value={row[property]} onChange={(event) => { handleInputChange(event) }} /></div>))}
                     <div>
                         {tableName !== "casa" &&
-                            <select name="idCasa" onChange={(event) => handleInputChange(event, selectedRowList)}>
+                            <select name="idCasa" onChange={(event) => handleInputChange(event)}>
                                 {tableName === "animale" && <option value="" selected={!row.idCasa && true}>NULL</option>}
                                 {casaList.map((casa, index) => <option key={index} value={casa.id} selected={row.idCasa === casa.id && true}>{casa.via}</option>)}
                             </select>
                         }
                     </div>
-                    <div><button className="table-button" type="submit" >{submitFunction === "update" && "UPDATE"}{submitFunction === "add" && "ADD"}</button></div>
+                    <div><button className="table-button" type="submit" onClick={() => handleErrors()} >{submitFunction === "update" && "UPDATE"}{submitFunction === "add" && "ADD"}</button></div>
 
                 </div>
 

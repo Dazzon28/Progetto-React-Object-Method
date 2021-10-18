@@ -1,11 +1,15 @@
 @keyframes spinner{
     to{transform:rotate( 360deg);}
 }
+body{
+    overflow-x: hidden;
+}
 .img-spinner{
     animation: spinner 2s linear infinite;
     filter: invert(32%) sepia(51%) saturate(5688%) hue-rotate(194deg) brightness(94%) contrast(98%);
 }
 .loader-div{
+    overflow: hidden;
     margin: 50% 0 0;
     display: flex;
     position: absolute;
