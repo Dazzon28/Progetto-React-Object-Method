@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { UpdateData, AddData } from "../../Apis/SaveData";
 import FetchData from "../../Apis/FetchData";
 import { Casa } from "../../Models/Models"
@@ -8,22 +8,23 @@ import { setRow } from "../../Redux/Slices/rowSlice";
 import { RootState } from "../../Redux/store";
 interface Modal {
     submitFunction: string,
-    filter: any,
+    filter:(row:{}) =>string[],
     tableName: string,
-    updateList: any,
+    updateList: (tableName:string)=>void,
     viewModal: any
 }
 const Modal = ({ submitFunction, filter, tableName, updateList, viewModal }: Modal) => {
-    const ref = useRef<any>()
+    const ref = useRef<HTMLDivElement>(null)
     const dispatch = useDispatch();
     const [casaList, setCasaList] = useState<Casa[]>([]);
     const [propertyHasErrors, setPropertyHasErrors] = useState<any>({})
     const [isModalClosed, setIsModalClosed] = useState(false)
     const regex = new RegExp(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/)
     const row = useSelector((state: RootState) => state.setRow).value.payload
-    const handleInputChange = (e: any) => {
-        const evValue = e.currentTarget.value;
-        const evName = e.currentTarget.name;
+    const handleInputChange = (e: ChangeEvent) => {
+        const element = e.currentTarget as HTMLInputElement;
+        const evValue = element.value
+        const evName = element.name
         const keys = Object.keys(row);
         keys.map((key) => (setPropertyHasErrors((l: {}) => ({ ...l, [evName]: false })), dispatch(setRow({ ...row, [evName]: evValue }))))
 
@@ -32,15 +33,15 @@ const Modal = ({ submitFunction, filter, tableName, updateList, viewModal }: Mod
         Object.keys(row).map((property) => setPropertyHasErrors((l: {}) => ({ ...l, [property]: false })))
         FetchData("casa")
             .then((data) => setCasaList(data))
-        const handleClickOutside = (event: any) => {
-            if (ref.current && !ref.current.contains(event.target)) {
+        const handleClickOutside = (event: Event) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
                 closeModal()
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
     }, [])
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: FormEvent) => {
         { submitFunction === "update" && UpdateData(tableName, row).finally(() => updateList(tableName)) };
         { submitFunction === "add" && AddData(tableName, row).finally(() => updateList(tableName)) }
         closeModal()
@@ -77,7 +78,7 @@ const Modal = ({ submitFunction, filter, tableName, updateList, viewModal }: Mod
 
                 <div className={!isModalClosed ? "selected-row modal top-to-bottom" : "selected-row modal bottom-to-top"} ref={ref}>
                     <img className="close-button" src="img/close.png" alt="X" onClick={() => closeModal()} />
-                    {filter(row).map((property: any, index: number) => (<div className="input-flex"><label>{property}</label><input required type="text" autoComplete="off" className={propertyHasErrors[property] && "input-error"} name={property} key={index} value={row[property]} onChange={(event) => { handleInputChange(event) }} /></div>))}
+                    {filter(row).map((property: string, index: number) => (<div className="input-flex"><label>{property}</label><input required type="text" autoComplete="off" className={propertyHasErrors[property] ? "input-error" : ""}  name={property} key={index} value={row[property]} onChange={(event) => { handleInputChange(event) }} /></div>))}
                     <div>
                         {tableName !== "casa" &&
                             <select name="idCasa" onChange={(event) => handleInputChange(event)}>

@@ -15,7 +15,8 @@ export const PropertyErrorSlice = createSlice({
     reducers:{
         setPropertyHasError:(state,data) => {state.value = data}
     }
+    
 })
 
-export const setPropertyHasError = PropertyErrorSlice.actions
+export const {setPropertyHasError} = PropertyErrorSlice.actions
 export default PropertyErrorSlice.reducer

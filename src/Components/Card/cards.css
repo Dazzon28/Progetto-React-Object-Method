@@ -8,9 +8,20 @@
 .persona{
     background-color: brown;
 }
+@keyframes zoom-in{
+    from {transform:scale( 1.2);}
+    to {transform:scale( 1)}
+}
+@keyframes zoom-out{
+    from {transform:scale( 1)}
+    to {transform:scale( 1.2)}
+}
 .dog:hover,.persona:hover,.casa:hover{
-    transition: transform .2s;
-    transform:scale(1.2);
+    transform: scale(1.2);
+}
+
+.dog,.persona,.casa{
+    transition: transform .5s ease;
     
 }
 .card-title{

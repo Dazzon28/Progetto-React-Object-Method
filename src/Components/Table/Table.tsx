@@ -10,12 +10,14 @@ import { listSet } from "../../Redux/Slices/ListSlice";
 import { setRow } from "../../Redux/Slices/rowSlice";
 import Error from "../../Components/Error/Error"
 import { setError } from "../../Redux/Slices/ErrorSlice";
+import {useGetAllDataQuery} from "../../Redux/Services/fetchAllData"
 interface Props {
     name: string,
 }
 
-
 const Table = ({ name }: Props) => {
+    const { data, error ,isLoading, isSuccess, isError} = useGetAllDataQuery(name)
+    console.log(data)
     const list = useSelector((state: RootState) => state.setList)
     const [loading, setLoading] = useState(true);
     const [fetchHasError,setFetchHasError] = useState(false);
@@ -47,7 +49,7 @@ const Table = ({ name }: Props) => {
         { methodName === "add" && name === "persona" && keys.map((key, i) => (l = { ...l, [key]: "", idCasa: 1 }, dispatch(setRow(l)))) }
 
     }
-    const filterList = (list: any) => Object.keys(list).filter((property) => property !== "id" && property !== "idCasa")
+    const filterList = (list: {}) => Object.keys(list).filter((property) => property !== "id" && property !== "idCasa")
     return (
         <div className="table-container">
             {loading ? <LoadingSpinner /> : fetchHasError ? <Error />:
